@@ -1,6 +1,5 @@
-replicas: 4
-image:
-  repository: end-to-end-devops-project
-  tag: latest
-service:
-  port: 5001
+replicas: 5
+image: end-to-end-devops-project
+tag: latest
+port: 5001
+workers: 2

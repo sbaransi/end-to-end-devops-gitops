@@ -1,5 +1,0 @@
-replicas: 2
-image: end-to-end-devops-project
-tag: latest
-port: 5001
-workers: 2

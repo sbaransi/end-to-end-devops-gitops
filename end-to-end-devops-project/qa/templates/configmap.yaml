@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devops-flask-cm
+data:
+  FLASK_PORT: "{{ .Values.port }}"
+  GUNICORN_WORKERS: "{{ .Values.workers }}"
