@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: end-to-end-devops-project
+spec:
+  generators:
+  - list:
+      elements:
+      - env: dev
+      - env: qa
+      - env: prd
+
+  template:
+    metadata:
+      name: '{{env}}-flask-app'
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/sbaransi/end-to-end-devops-gitops.git
+        targetRevision: HEAD
+        path: end-to-end-devops-project/{{env}}
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{env}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,6 @@
+replicas: 2
+image:
+  repository: end-to-end-devops-project
+  tag: latest
+service:
+  port: 5001
