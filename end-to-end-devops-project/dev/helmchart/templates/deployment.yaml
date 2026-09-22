@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-flask-deploy
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: devops-flask-app
+  template:
+    metadata:
+      labels:
+        app: devops-flask-app
+    spec:
+      containers:
+        - name: flask-container
+          image: "{{ .Values.image }}:{{ .Values.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.port }}
+          envFrom:
+            - configMapRef:
+                name: devops-flask-cm
