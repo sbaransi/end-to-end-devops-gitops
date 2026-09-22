@@ -5,15 +5,16 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - env: dev
-          - env: qa
-          - env: prd
+    # One Application for every folder under end-to-end-devops-project/ (dev, qa, prd)
+    - git:
+        repoURL: https://github.com/sbaransi/end-to-end-devops-gitops.git
+        revision: main
+        directories:
+          - path: end-to-end-devops-project/*
 
   template:
     metadata:
-      name: '{{env}}-flask-app'
+      name: '{{path.basename}}-flask-app'
       namespace: argocd
 
     spec:
@@ -22,11 +23,14 @@ spec:
       source:
         repoURL: https://github.com/sbaransi/end-to-end-devops-gitops.git
         targetRevision: main
-        path: 'end-to-end-devops-project/{{env}}'
+        path: '{{path}}'
+        helm:
+          valueFiles:
+            - values.yaml
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{env}}'
+        namespace: '{{path.basename}}'
 
       syncPolicy:
         automated:
