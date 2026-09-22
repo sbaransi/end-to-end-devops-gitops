@@ -3,3 +3,4 @@ image: end-to-end-devops-project
 tag: latest
 port: 5001
 workers: 2
+ingressHost: qa.devops.local

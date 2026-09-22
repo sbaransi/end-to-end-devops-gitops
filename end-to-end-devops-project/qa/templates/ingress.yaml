@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: devops.local
+  - host: {{ .Values.ingressHost }}
     http:
       paths:
       - path: /
