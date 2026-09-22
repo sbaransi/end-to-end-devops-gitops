@@ -1,4 +1,4 @@
-replicas: 5
+replicas: 4
 image: end-to-end-devops-project
 tag: latest
 port: 5001
