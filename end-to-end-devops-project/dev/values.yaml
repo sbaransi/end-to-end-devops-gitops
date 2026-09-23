@@ -1,6 +1,6 @@
 replicas: 4
 image: sammybaransi537/end-to-end-devops-project
-tag: "2"
+tag: '4'
 port: 5001
 workers: 2
 ingressHost: dev.devops.local
