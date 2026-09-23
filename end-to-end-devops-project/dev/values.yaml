@@ -1,4 +1,4 @@
-replicas: 4
+replicas: 5
 image: sammybaransi537/end-to-end-devops-project
 tag: '4'
 port: 5001
