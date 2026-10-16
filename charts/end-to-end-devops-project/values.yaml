@@ -1,0 +1,10 @@
+# Default values for every environment.
+# Each environment overrides these in <app>/<env>/values.yaml in this repository.
+replicas: 1
+image: sammybaransi537/end-to-end-devops-project
+tag: latest
+port: 5001
+workers: 2
+serviceType: ClusterIP
+ingressHost: devops.local
+resources: {}

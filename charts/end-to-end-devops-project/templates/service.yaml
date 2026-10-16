@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: devops-flask-svc
 spec:
-  type: ClusterIP
+  type: {{ .Values.serviceType | default "ClusterIP" }}
   selector:
     app: devops-flask-app
   ports:

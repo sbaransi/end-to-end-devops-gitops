@@ -1,6 +1,15 @@
+# qa: tag is promoted by hand (pull request) after it works in dev
 replicas: 2
 image: sammybaransi537/end-to-end-devops-project
 tag: "2"
 port: 5001
 workers: 2
+serviceType: ClusterIP
 ingressHost: qa.devops.local
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi

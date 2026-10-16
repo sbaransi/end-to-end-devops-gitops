@@ -1,6 +1,15 @@
+# prd: tag is promoted by hand (pull request) after it works in qa
 replicas: 3
 image: sammybaransi537/end-to-end-devops-project
 tag: "2"
 port: 5001
 workers: 4
+serviceType: ClusterIP
 ingressHost: prd.devops.local
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
