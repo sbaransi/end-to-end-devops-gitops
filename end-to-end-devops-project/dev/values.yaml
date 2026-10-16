@@ -1,6 +1,15 @@
+# dev: updated automatically by Jenkins (the tag line) on every build
 replicas: 5
 image: sammybaransi537/end-to-end-devops-project
 tag: '6'
 port: 5001
 workers: 2
+serviceType: ClusterIP
 ingressHost: dev.devops.local
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

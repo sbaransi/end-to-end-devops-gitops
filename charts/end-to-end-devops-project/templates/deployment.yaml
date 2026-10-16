@@ -21,3 +21,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: devops-flask-cm
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
