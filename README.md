@@ -9,14 +9,21 @@ Argo CD watches the `main` branch and keeps the cluster the same as this reposit
 
 ```text
 applicationsets/
-  flask-applicationset.yaml   # creates one Argo CD Application per environment
+  flask-applicationset.yaml        # creates one Argo CD Application per environment
+charts/
+  end-to-end-devops-project/       # ONE Helm chart, shared by all environments
+    Chart.yaml
+    values.yaml                    # default values
+    templates/                     # ConfigMap, Deployment, Service, Ingress
 end-to-end-devops-project/
-  dev/   Chart.yaml  values.yaml  templates/
-  qa/    Chart.yaml  values.yaml  templates/
-  prd/   Chart.yaml  values.yaml  templates/
+  dev/values.yaml                  # dev settings (tag updated by Jenkins)
+  qa/values.yaml                   # qa settings
+  prd/values.yaml                  # prd settings
 ```
 
-Each environment folder is a small Helm chart. The templates (ConfigMap, Deployment, Service, Ingress) are the same in all three folders. Only `values.yaml` is different.
+There is only one copy of the Helm templates, in `charts/end-to-end-devops-project/`.
+Each environment folder holds only its own `values.yaml`, so a change to a template reaches all
+environments, and the differences between environments are easy to see.
 
 ## Environments
 
@@ -24,12 +31,18 @@ Each environment folder is a small Helm chart. The templates (ConfigMap, Deploym
 |---|---|---|---|
 | Namespace | `dev` | `qa` | `prd` |
 | Replicas | 5 | 2 | 3 |
+| CPU request / limit | 50m / 200m | 100m / 250m | 200m / 500m |
+| Memory request / limit | 64Mi / 128Mi | 128Mi / 256Mi | 256Mi / 512Mi |
+| Service type | ClusterIP | ClusterIP | ClusterIP |
 | Workers (`GUNICORN_WORKERS` in the ConfigMap) | 2 | 2 | 4 |
 | Ingress host | `dev.devops.local` | `qa.devops.local` | `prd.devops.local` |
 | Image | `sammybaransi537/end-to-end-devops-project` | same | same |
 | Tag | Set by Jenkins on every build | Changed by hand | Changed by hand |
 
 Tags are Jenkins build numbers, so every environment points to one fixed image.
+
+The service type is ClusterIP everywhere because traffic comes in through the NGINX Ingress.
+It can be changed per environment with `serviceType` (for example `LoadBalancer` on a cloud cluster).
 
 The app currently starts with `python app.py`, so the workers value is only stored in the ConfigMap.
 
@@ -39,8 +52,19 @@ The app currently starts with `python app.py`, so the workers value is only stor
 
 - It lists the folders under `end-to-end-devops-project/` on `main`: dev, qa and prd.
 - For each folder it creates an Application named `<folder>-flask-app`, for example `dev-flask-app`.
-- That Application deploys the folder's chart with its `values.yaml` into the namespace of the same name.
+- Every Application deploys the shared chart `charts/end-to-end-devops-project` with that folder's
+  `values.yaml` (`../../end-to-end-devops-project/<env>/values.yaml`, relative to the chart) into the namespace of the same name.
 - Sync is automatic, with `prune` (delete what was removed from Git), `selfHeal` (undo manual changes in the cluster) and `CreateNamespace=true`.
+
+To add a new environment, create a new folder with a `values.yaml`, for example
+`end-to-end-devops-project/staging/values.yaml`. Argo CD creates `staging-flask-app` by itself.
+
+Render an environment locally (the same thing Argo CD does):
+
+```bash
+helm template dev-flask-app charts/end-to-end-devops-project \
+  -f end-to-end-devops-project/dev/values.yaml
+```
 
 Apply it once, after Argo CD is installed:
 

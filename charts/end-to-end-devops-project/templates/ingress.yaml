@@ -14,4 +14,4 @@ spec:
           service:
             name: devops-flask-svc
             port:
-              number: 5001
+              number: {{ .Values.port }}

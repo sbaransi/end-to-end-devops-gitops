@@ -5,7 +5,8 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    # One Application for every folder under end-to-end-devops-project/ (dev, qa, prd)
+    # Git directory generator: one Application for every folder
+    # under end-to-end-devops-project/ (dev, qa, prd)
     - git:
         repoURL: https://github.com/sbaransi/end-to-end-devops-gitops.git
         revision: main
@@ -14,6 +15,7 @@ spec:
 
   template:
     metadata:
+      # dev-flask-app, qa-flask-app, prd-flask-app
       name: '{{path.basename}}-flask-app'
       namespace: argocd
 
@@ -23,10 +25,13 @@ spec:
       source:
         repoURL: https://github.com/sbaransi/end-to-end-devops-gitops.git
         targetRevision: main
-        path: '{{path}}'
+        # One shared Helm chart for all environments
+        path: charts/end-to-end-devops-project
         helm:
+          # The environment's own values file. The path is relative to the chart folder,
+          # e.g. ../../end-to-end-devops-project/dev/values.yaml
           valueFiles:
-            - values.yaml
+            - '../../{{path}}/values.yaml'
 
       destination:
         server: https://kubernetes.default.svc
