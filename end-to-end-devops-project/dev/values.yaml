@@ -1,7 +1,7 @@
 # dev: updated automatically by Jenkins (the tag line) on every build
 replicas: 5
 image: sammybaransi537/end-to-end-devops-project
-tag: '8'
+tag: 'gha-1'
 port: 5001
 workers: 2
 serviceType: ClusterIP
