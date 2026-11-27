@@ -120,7 +120,7 @@ kubectl get applications -n argocd
 kubectl get deploy,pods,svc,endpoints,ingress -n dev
 kubectl get deploy,pods,svc,endpoints,ingress -n qa
 kubectl get deploy,pods,svc,endpoints,ingress -n prd
-kubectl get deploy devops-flask-deploy -n dev -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+kubectl get deploy dev-flask-app-deploy -n dev -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
 curl -H "Host: dev.devops.local" http://127.0.0.1:8080/health
 ```
 
