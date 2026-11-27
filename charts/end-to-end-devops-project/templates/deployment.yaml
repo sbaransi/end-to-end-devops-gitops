@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: devops-flask-deploy
+  name: {{ .Release.Name }}-deploy
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: devops-flask-app
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: devops-flask-app
+        app: {{ .Release.Name }}
     spec:
       containers:
         - name: flask-container
@@ -20,7 +20,7 @@ spec:
             - containerPort: {{ .Values.port }}
           envFrom:
             - configMapRef:
-                name: devops-flask-cm
+                name: {{ .Release.Name }}-cm
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
